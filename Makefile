@@ -1,2 +1,2 @@
-bake: src/main.c
-	gcc src/main.c -o bake
+bake: src/main.c src/bake_context.c src/format_cpp.c
+	gcc -Isrc src/main.c src/bake_context.c src/format_cpp.c -o bake
