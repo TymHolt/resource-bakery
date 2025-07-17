@@ -53,15 +53,42 @@ bool printHeadSection(FILE* dstHandle, char *dstFile) {
     strcpy(defIdent + identStrLen, DEF_SUFFIX);
     defIdent[sizeof(defIdent) - 1] = '\0';
 
-    printf("#ifndef %s\n#define %s\n\n#include <string>\n\nnamespace %s {\n\n",
-        defIdent, defIdent, ident);
+    return fprintf(dstHandle, "#ifndef %s\n#define %s\n\n#include <string>\n\nnamespace %s {\n\n",
+        defIdent, defIdent, ident) > 0
+        && fprintf(dstHandle, "    const std::string content =");
 }
 
-bool printTailSection(FILE* dstHandle) {
+bool printContentStartLn(FILE *dstHandle) {
+    return fprintf(dstHandle, "\n        \"");
+}
 
+bool printContentEndLn(FILE *dstHandle) {
+    return fprintf(dstHandle, "\\n\"");
+}
+
+
+bool printTailSection(FILE* dstHandle) {
+    return fprintf(dstHandle, ";\n}\n\n#endif\n");
 }
 
 bool cppBake(BakeContext *context, char *dstFile) {
     printHeadSection(context->dstHandle, dstFile);
+    printContentStartLn(context->dstHandle);
+
+    char c;
+    while ((c = fgetc(context->srcHandle)) != EOF) {
+        bool success = false;
+
+        if (c == '\n')
+            success = printContentEndLn(context->dstHandle) && printContentStartLn(context->dstHandle);
+        else
+            success = fputc(c, context->dstHandle) == c;
+
+        if (!success)
+            return success;
+    }
+
+    printContentEndLn(context->dstHandle);
     printTailSection(context->dstHandle);
+    return true;
 }
