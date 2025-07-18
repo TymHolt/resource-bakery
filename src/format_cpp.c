@@ -82,7 +82,7 @@ bool cppBake(BakeContext *context, char *dstFile) {
         if (c == '\n')
             success = printContentEndLn(context->dstHandle) && printContentStartLn(context->dstHandle);
         else
-            success = fputc(c, context->dstHandle) == c;
+            success = ((char) fputc(c, context->dstHandle)) == c;
 
         if (!success)
             return success;
