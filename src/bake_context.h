@@ -7,12 +7,12 @@
 typedef struct BakeContext_Struct {
     FILE *srcHandle;
     FILE *dstHandle;
-    char *contentBuffer;
 } BakeContext;
 
 bool tryContextOpen(char *srcFile, char *dstFile, BakeContext *result);
 void contextClose(BakeContext *context);
-bool contextEndOfSrc(BakeContext *context);
-bool tryContextRead(BakeContext *context);
+char contextReadChar(BakeContext *context);
+bool tryContextWriteStr(BakeContext *context, char *content);
+bool tryContextWriteChar(BakeContext *context, char content);
 
 #endif

@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "utils.h"
 #include "format/cpp/format_cpp.h"
 
 typedef struct Args_Struct {
@@ -78,7 +80,14 @@ int main(int argc, char **argv) {
     int exitCode = EXIT_SUCCESS;
 
     if (cppIsFormatName(bakeFormat)) {
-        cppBake(&context, dstFile);
+        char *namespaceName = strCpyAlphaAlloc(dstFile);
+        char *headerDefName = strConcatAlloc(namespaceName, "_H");
+        char *varName = "content";
+        
+        exitCode = cppBakeText(&context, headerDefName, namespaceName, varName);
+
+        free(headerDefName);
+        free(namespaceName);
     } else {
         printf("Unknown bake format '%s'\n", bakeFormat);
         exitCode = EXIT_ERROR;   

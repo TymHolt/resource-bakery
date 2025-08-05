@@ -5,6 +5,6 @@
 #include "bake_context.h"
 
 bool cppIsFormatName(char *formatName);
-bool cppBake(BakeContext *context, char *dstFile);
+bool cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName, char *varName);
 
 #endif
