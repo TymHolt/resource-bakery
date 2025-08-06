@@ -19,6 +19,7 @@ bool tryContextOpen(char *srcFile, char *dstFile, BakeContext *result) {
 
     result->srcHandle = srcHandle;
     result->dstHandle = dstHandle;
+    result->errorCount = 0;
     return true;
 }
 
@@ -27,14 +28,28 @@ void contextClose(BakeContext *context) {
     fclose(context->dstHandle);
 }
 
+bool contextHadErrors(BakeContext *context) {
+    return context->errorCount > 0;
+}
+
 char contextReadChar(BakeContext *context) {
     return fgetc(context->srcHandle);
 }
 
 bool contextWriteStr(BakeContext *context, char *content) {
-    return fprintf(context->dstHandle, "%s", content) == strlen(content);
+    if (fprintf(context->dstHandle, "%s", content) != strlen(content)) {
+        context->errorCount++;
+        return false;
+    }
+
+    return true;
 }
 
 bool contextWriteChar(BakeContext *context, char content) {
-    return ((char) fputc(content, context->dstHandle)) == content;
+    if (((char) fputc(content, context->dstHandle)) != content) {
+        context->errorCount++;
+        return false;
+    }
+
+    return true;
 }

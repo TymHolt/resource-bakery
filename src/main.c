@@ -79,18 +79,23 @@ int main(int argc, char **argv) {
 
     int exitCode = EXIT_SUCCESS;
 
-    if (cppIsFormatName(bakeFormat)) {
+    if (cppIsFormatNameText(bakeFormat)) {
         char *namespaceName = strCpyAlphaAlloc(dstFile);
         char *headerDefName = strConcatAlloc(namespaceName, "_H");
         char *varName = "content";
         
-        exitCode = cppBakeText(&context, headerDefName, namespaceName, varName);
+        cppBakeText(&context, headerDefName, namespaceName, varName);
 
         free(headerDefName);
         free(namespaceName);
     } else {
         printf("Unknown bake format '%s'\n", bakeFormat);
         exitCode = EXIT_ERROR;   
+    }
+
+    if (contextHadErrors(&context)) {
+        printf("I/O errors occurred\n");
+        exitCode = EXIT_ERROR;
     }
 
     contextClose(&context);

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "bake_context.h"
 
-bool cppIsFormatName(char *formatName);
-bool cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName, char *varName);
+bool cppIsFormatNameText(char *formatName);
+void cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName, char *varName);
 
 #endif

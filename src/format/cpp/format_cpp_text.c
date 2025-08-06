@@ -1,60 +1,61 @@
-#include <format/cpp/format_cpp.h>
-#include <stdbool.h>
+#include "format/cpp/format_cpp.h"
 #include <string.h>
 
-bool cppIsFormatName(char *formatName) {
+bool cppIsFormatNameText(char *formatName) {
     return strcmp("cpp-text", formatName) == 0
         || strcmp("c++-text", formatName) == 0; 
 }
 
-bool writeCharCheckEscape(BakeContext *context, char content) {
+void writeCharCheckEscape(BakeContext *context, char content) {
     switch (content) {
         case '\"':
-            return contextWriteStr(context, "\\\"");
+            contextWriteStr(context, "\\\"");
+            break;
         case '\r':
-            return contextWriteStr(context, "\\r");
+            contextWriteStr(context, "\\r");
+            break;
         case '\t':
-            return contextWriteStr(context, "\\t");            
+            contextWriteStr(context, "\\t");
+            break;            
         default:
-            return contextWriteChar(context, content);
+            contextWriteChar(context, content);
+            break;
     }
 }
 
-bool cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName, char *varName) {
-    bool success =
-        // #define [...]
-        contextWriteStr(context, "#ifndef ") &&
-        contextWriteStr(context, headerDefName) &&
-        contextWriteStr(context, "\n") &&
+void cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName, char *varName) {
+    // #define [...]
+    contextWriteStr(context, "#ifndef ") &&
+    contextWriteStr(context, headerDefName) &&
+    contextWriteStr(context, "\n") &&
 
-        // #define [...]
-        contextWriteStr(context, "#define ") &&
-        contextWriteStr(context, headerDefName) &&
-        contextWriteStr(context, "\n\n") &&
+    // #define [...]
+    contextWriteStr(context, "#define ") &&
+    contextWriteStr(context, headerDefName) &&
+    contextWriteStr(context, "\n\n") &&
+
+    // #include <string>
+    contextWriteStr(context, "#include <string>\n\n") &&
     
-        // #include <string>
-        contextWriteStr(context, "#include <string>\n\n") &&
-        
-        // namespace [...]  {
-        contextWriteStr(context, "namespace ") &&
-        contextWriteStr(context, namespaceName) &&
-        contextWriteStr(context, " {\n\n") &&
+    // namespace [...]  {
+    contextWriteStr(context, "namespace ") &&
+    contextWriteStr(context, namespaceName) &&
+    contextWriteStr(context, " {\n\n") &&
 
-        // const std::string [...] =    "
-        contextWriteStr(context, "    const std::string ") &&
-        contextWriteStr(context, varName) &&
-        contextWriteStr(context, " =\n        \"");
+    // const std::string [...] =    "
+    contextWriteStr(context, "    const std::string ") &&
+    contextWriteStr(context, varName) &&
+    contextWriteStr(context, " =\n        \"");
 
     // ...\n"   "...
     char content;
     while ((content = contextReadChar(context)) != EOF) {
         if (content == '\n')
-            success = contextWriteStr(context, "\\n\"\n        \"") && success;    
+            contextWriteStr(context, "\\n\"\n        \"");    
         else
-            success = writeCharCheckEscape(context, content);
+            writeCharCheckEscape(context, content);
     }
 
     // "; } #endif
-    success = contextWriteStr(context, "\";\n\n}\n\n#endif\n") && success;
-    return success;
+    contextWriteStr(context, "\";\n\n}\n\n#endif\n");
 }
