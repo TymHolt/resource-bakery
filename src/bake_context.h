@@ -12,7 +12,7 @@ typedef struct BakeContext_Struct {
 bool tryContextOpen(char *srcFile, char *dstFile, BakeContext *result);
 void contextClose(BakeContext *context);
 char contextReadChar(BakeContext *context);
-bool tryContextWriteStr(BakeContext *context, char *content);
-bool tryContextWriteChar(BakeContext *context, char content);
+bool contextWriteStr(BakeContext *context, char *content);
+bool contextWriteChar(BakeContext *context, char content);
 
 #endif

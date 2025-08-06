@@ -31,10 +31,10 @@ char contextReadChar(BakeContext *context) {
     return fgetc(context->srcHandle);
 }
 
-bool tryContextWriteStr(BakeContext *context, char *content) {
+bool contextWriteStr(BakeContext *context, char *content) {
     return fprintf(context->dstHandle, "%s", content) == strlen(content);
 }
 
-bool tryContextWriteChar(BakeContext *context, char content) {
+bool contextWriteChar(BakeContext *context, char content) {
     return ((char) fputc(content, context->dstHandle)) == content;
 }
