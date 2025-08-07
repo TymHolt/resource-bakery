@@ -6,7 +6,7 @@ bool cppIsFormatNameText(char *formatName) {
         || strcmp("c++-text", formatName) == 0; 
 }
 
-void writeCharCheckEscape(BakeContext *context, char content) {
+void cppWriteCharCheckEscape(BakeContext *context, char content) {
     switch (content) {
         case '\"':
             contextWriteStr(context, "\\\"");
@@ -24,7 +24,7 @@ void writeCharCheckEscape(BakeContext *context, char content) {
 }
 
 void cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName, char *varName) {
-    // #define [...]
+    // #ifndef [...]
     contextWriteStr(context, "#ifndef ") &&
     contextWriteStr(context, headerDefName) &&
     contextWriteStr(context, "\n") &&
@@ -53,7 +53,7 @@ void cppBakeText(BakeContext *context, char *headerDefName, char *namespaceName,
         if (content == '\n')
             contextWriteStr(context, "\\n\"\n        \"");    
         else
-            writeCharCheckEscape(context, content);
+            cppWriteCharCheckEscape(context, content);
     }
 
     // "; } #endif

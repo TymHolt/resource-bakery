@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "format/cpp/format_cpp.h"
+#include "format/java/format_java.h"
 
 typedef struct Args_Struct {
     int argc;    // Arguments count
@@ -51,15 +52,15 @@ int main(int argc, char **argv) {
         return EXIT_ERROR;
     }
 
-    char *srcFile;
-    if (!tryArgsGetNext(&args, &srcFile)) {
+    char *srcFileName;
+    if (!tryArgsGetNext(&args, &srcFileName)) {
         printf("No source file given\n");
         printUsage(execName);
         return EXIT_ERROR;
     }
 
-    char *dstFile;
-    if (!tryArgsGetNext(&args, &dstFile)) {
+    char *dstFileName;
+    if (!tryArgsGetNext(&args, &dstFileName)) {
         printf("No destination file given\n");
         printUsage(execName);
         return EXIT_ERROR;
@@ -72,7 +73,7 @@ int main(int argc, char **argv) {
     }
 
     BakeContext context;
-    if (!tryContextOpen(srcFile, dstFile, &context)) {
+    if (!tryContextOpen(srcFileName, dstFileName, &context)) {
         printf("Could not create baking context\n");
         return EXIT_ERROR;
     }
@@ -80,14 +81,22 @@ int main(int argc, char **argv) {
     int exitCode = EXIT_SUCCESS;
 
     if (cppIsFormatNameText(bakeFormat)) {
-        char *namespaceName = strCpyAlphaAlloc(dstFile);
+        char *namespaceName = strCpyAlphaAlloc(dstFileName);
         char *headerDefName = strConcatAlloc(namespaceName, "_H");
         char *varName = "content";
-        
+
         cppBakeText(&context, headerDefName, namespaceName, varName);
 
         free(headerDefName);
         free(namespaceName);
+    } else if (javaIsFormatNameText(bakeFormat)) {
+        char *packageName = "resources.baked";
+        char *className = strFileNameNoExtAlphaAlloc(dstFileName);
+        char *varName = "content";
+
+        javaBakeText(&context, packageName, className, varName);
+
+        free(className);
     } else {
         printf("Unknown bake format '%s'\n", bakeFormat);
         exitCode = EXIT_ERROR;   

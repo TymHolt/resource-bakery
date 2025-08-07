@@ -37,3 +37,34 @@ char *strConcatAlloc(char *left, char *right) {
     
     return res;
 }
+
+// Return the given file name wihtout its extension as a new allocation
+char *strFileNameNoExtAlphaAlloc(char *fileName) {
+    const size_t no_ext = -1;
+    size_t extIdx = no_ext;
+    size_t idx = 0;
+    char c;
+
+    while((c = fileName[idx]) != '\0') {
+        if (c == '.')
+            extIdx = idx;
+
+        idx++;
+    }
+
+    // Default value. If no extension is found, return whole file name
+    size_t newLen = idx + 1;
+
+    if (extIdx != no_ext) {
+        // Extension found, calculate new length
+        newLen = extIdx; // No +1, so the '.' won't be included
+    }
+
+    char *res = (char *) malloc(sizeof(char) * (newLen + 1));
+    strncpy(res, fileName, newLen);
+    res[newLen] = '\0';
+
+    strAlphaNum(res, '_');
+
+    return res;
+}
