@@ -16,5 +16,6 @@ bool contextHadErrors(BakeContext *context);
 char contextReadChar(BakeContext *context);
 bool contextWriteStr(BakeContext *context, char *content);
 bool contextWriteChar(BakeContext *context, char content);
+bool contextWriteHexValue(BakeContext *context, char value);
 
 #endif

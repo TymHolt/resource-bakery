@@ -97,6 +97,14 @@ int main(int argc, char **argv) {
         javaBakeText(&context, packageName, className, varName);
 
         free(className);
+    } else if (javaIsFormatNameRaw(bakeFormat)) {
+        char *packageName = "resources.baked";
+        char *className = strFileNameNoExtAlphaAlloc(dstFileName);
+        char *varName = "content";
+
+        javaBakeRaw(&context, packageName, className, varName);
+
+        free(className);
     } else {
         printf("Unknown bake format '%s'\n", bakeFormat);
         exitCode = EXIT_ERROR;   

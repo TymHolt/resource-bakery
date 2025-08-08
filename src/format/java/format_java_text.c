@@ -47,6 +47,6 @@ void javaBakeText(BakeContext *context, char *packageName, char *className, char
             javaWriteCharCheckEscape(context, content);
     }
 
-    // "; } #endif
+    // "; }
     contextWriteStr(context, "\";\n}\n");
 }

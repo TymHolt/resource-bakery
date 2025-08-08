@@ -1,6 +1,7 @@
 #include "bake_context.h"
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 
 bool tryContextOpen(char *srcFile, char *dstFile, BakeContext *result) {
     FILE *srcHandle;
@@ -52,4 +53,12 @@ bool contextWriteChar(BakeContext *context, char content) {
     }
 
     return true;
+}
+
+bool contextWriteHexValue(BakeContext *context, char value) {
+    char digMajor = getHexDigit(value / 16);
+    char digMinor = getHexDigit(value % 16);
+    
+    return contextWriteChar(context, digMajor) &&
+        contextWriteChar(context, digMinor);
 }

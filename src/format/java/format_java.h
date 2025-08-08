@@ -6,5 +6,8 @@
 
 bool javaIsFormatNameText(char *formatName);
 void javaBakeText(BakeContext *context, char *packageName, char *className, char *varName);
+bool javaIsFormatNameRaw(char *formatName);
+void javaBakeRaw(BakeContext *context, char *packageName, char *className, char *varName);
+
 
 #endif
