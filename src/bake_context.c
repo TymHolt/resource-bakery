@@ -59,6 +59,15 @@ bool contextWriteHexValue(BakeContext *context, char value) {
     char digMajor = getHexDigit(value / 16);
     char digMinor = getHexDigit(value % 16);
     
-    return contextWriteChar(context, digMajor) &&
-        contextWriteChar(context, digMinor);
+    if (!contextWriteChar(context, digMajor) || !contextWriteChar(context, digMinor)) {
+        context->errorCount++;
+        return false;
+    }
+
+    return true;
+}
+
+// TODO Error checking?
+void contextWriteInt(BakeContext *context, int value) {
+    fprintf(context->dstHandle, "%i", value);
 }

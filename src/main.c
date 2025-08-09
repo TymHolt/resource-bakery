@@ -85,7 +85,17 @@ int main(int argc, char **argv) {
         char *headerDefName = strConcatAlloc(namespaceName, "_H");
         char *varName = "content";
 
-        cppBakeText(&context, headerDefName, namespaceName, varName);
+        cppBakeText(&context, namespaceName, headerDefName, varName);
+
+        free(headerDefName);
+        free(namespaceName);
+    } else if (cppIsFormatNameRaw(bakeFormat)) {
+        char *namespaceName = strCpyAlphaAlloc(dstFileName);
+        char *headerDefName = strConcatAlloc(namespaceName, "_H");
+        char *varName = "content";
+        char *lenVarName = "contentLen";
+
+        cppBakeRaw(&context, namespaceName, headerDefName, varName, lenVarName);
 
         free(headerDefName);
         free(namespaceName);

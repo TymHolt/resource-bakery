@@ -45,6 +45,6 @@ void javaBakeRaw(BakeContext *context, char *packageName, char *className, char 
         valuesInLine++;
     }
 
-    // "; }
+    // }; }
     contextWriteStr(context, "};\n}\n");
 }
